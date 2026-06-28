@@ -21,6 +21,9 @@ public class User {
     private String username;
 
     @Column(nullable = false)
+    private String name;
+
+    @Column(nullable = false)
     private String password;
 
     @Enumerated(EnumType.STRING)
@@ -36,9 +39,10 @@ public class User {
     }
 
     @Builder
-    public User(String username, String password, Role role) {
+    public User(String username, String password, Role role , String name) {
         this.username = username;
         this.password = password;
         this.role = role;
+        this.name= name;
     }
 }
