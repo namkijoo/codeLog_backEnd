@@ -6,7 +6,7 @@ const client = new OpenAI({
   apiKey: Env.OPENAI_API_KEY,
 });
 
-const DEFAULT_MODEL = 'gpt-4o-mini';
+const DEFAULT_MODEL = 'gpt-4o';
 
 async function chatJson(system: string, user: string): Promise<string> {
   const completion = await client.chat.completions.create({
