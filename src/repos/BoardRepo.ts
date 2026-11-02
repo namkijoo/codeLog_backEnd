@@ -71,9 +71,27 @@ async function deleteBoard(id: number): Promise<void> {
   await pool.execute('DELETE FROM boards WHERE id = ?', [id]);
 }
 
+async function countByUserId(userId: number): Promise<number> {
+  const [rows] = await pool.execute(
+    `SELECT COUNT(*) as count FROM boards WHERE userId=?`,
+    [userId],
+  );
+  return Number((rows as { count: number }[])[0].count);
+}
+
+async function findActivityCountsByUserId(userId: number, fromDate: string) {
+  const [rows] = await pool.execute(
+    `SELECT DATE_FORMAT(createdAt, '%Y-%m-%d') as date, COUNT(*) as count FROM boards WHERE userId = ? AND createdAt >= ? GROUP BY date ORDER BY date ASC`,
+    [userId, fromDate],
+  );
+  return rows as { date: string; count: number }[];
+}
+
 export default {
   findAllByUserId,
   createBoard,
   updateBoard,
   deleteBoard,
+  countByUserId,
+  findActivityCountsByUserId,
 };
