@@ -1,0 +1,13 @@
+node_modules
+npm-debug.log
+.git
+.gitignore
+tests
+config/.env*
+**/*.log
+tsconfig.tsbuildinfo
+README.md
+.eslintrc*
+eslint.config.ts
+.prettierrc*
+.prettierignore
