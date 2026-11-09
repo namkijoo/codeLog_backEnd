@@ -83,6 +83,12 @@ async function createBoard(
   username: string,
 ): Promise<BoardResponse> {
   assertBoardRequest(board);
+  if (await BoardRepo.existsByUserAndProblem(userId, board.problemNumber)) {
+    throw new RouteError(
+      HttpStatusCodes.CONFLICT, // 409
+      '이미 등록된 문제입니다.',
+    );
+  }
   const id = await BoardRepo.createBoard({
     userId,
     username,
@@ -111,6 +117,10 @@ async function updateBoard(
   id: number,
 ): Promise<BoardResponse> {
   assertBoardRequest(board);
+
+  if (await BoardRepo.existsByUserAndProblem(userId, board.problemNumber, id)) {
+    throw new RouteError(HttpStatusCodes.CONFLICT, '이미 등록된 문제입니다.');
+  }
 
   const mine = (await BoardRepo.findAllByUserId(userId)).find(
     (b) => b.id === id,

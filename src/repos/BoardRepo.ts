@@ -87,6 +87,22 @@ async function findActivityCountsByUserId(userId: number, fromDate: string) {
   return rows as { date: string; count: number }[];
 }
 
+async function existsByUserAndProblem(
+  userId: number,
+  problemNumber: number,
+  excludeId?: number,
+) {
+  const [rows] = await pool.execute(
+    excludeId == null
+      ? 'SELECT id FROM boards WHERE userId = ? AND problemNumber = ? LIMIT 1'
+      : 'SELECT id FROM boards WHERE userId = ? AND problemNumber = ? AND id <> ? LIMIT 1',
+    excludeId == null
+      ? [userId, problemNumber]
+      : [userId, problemNumber, excludeId],
+  );
+  return (rows as { id: number }[]).length > 0;
+}
+
 export default {
   findAllByUserId,
   createBoard,
@@ -94,4 +110,5 @@ export default {
   deleteBoard,
   countByUserId,
   findActivityCountsByUserId,
+  existsByUserAndProblem,
 };
