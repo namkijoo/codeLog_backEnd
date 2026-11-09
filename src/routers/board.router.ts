@@ -38,4 +38,11 @@ router.put('/:id', async (req, res) => {
   res.status(HttpStatusCodes.OK).json(updated);
 });
 
+router.delete('/:id', async (req, res) => {
+  const { id: userId } = (req as AuthedRequest<{ id: string }>).user;
+  const boardId = Number(req.params.id);
+  await BoardService.deleteBoard(boardId, userId);
+  res.status(HttpStatusCodes.NO_CONTENT).send();
+});
+
 export default router;
