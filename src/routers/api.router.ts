@@ -4,6 +4,8 @@ import Paths from '#src/common/constants/Paths/index.ts';
 
 import authRouter from './auth.router.ts';
 import boardRouter from './board.router.ts';
+import folderRouter from './folder.router.ts';
+import noteRouter from './note.router.ts';
 import recommendRouter from './recommend.router.ts';
 import statsRouter from './stats.router.ts';
 import userRouter from './user.router.ts';
@@ -13,6 +15,8 @@ const apiRouter = Router();
 apiRouter.use(Paths.Users.PATH, userRouter);
 apiRouter.use('/auth', authRouter);
 apiRouter.use('/boards', boardRouter);
+apiRouter.use('/folders', folderRouter);
+apiRouter.use('/notes', noteRouter);
 apiRouter.use('/recommend', recommendRouter);
 apiRouter.use('/stats', statsRouter);
 export default apiRouter;

@@ -1,5 +1,6 @@
 import { type RequestHandler, Router } from 'express';
 
+import { RouteError } from '#src/common/classes/route-errors.ts';
 import HttpStatusCodes from '#src/common/constants/HttpStatusCodes.ts';
 import {
   type AuthedRequest,
@@ -41,6 +42,12 @@ router.put('/:id', async (req, res) => {
 router.delete('/:id', async (req, res) => {
   const { id: userId } = (req as AuthedRequest<{ id: string }>).user;
   const boardId = Number(req.params.id);
+  if (!Number.isFinite(boardId) || boardId <= 0) {
+    throw new RouteError(
+      HttpStatusCodes.BAD_REQUEST,
+      '잘못된 게시글 ID입니다.',
+    );
+  }
   await BoardService.deleteBoard(boardId, userId);
   res.status(HttpStatusCodes.NO_CONTENT).send();
 });

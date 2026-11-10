@@ -1,0 +1,27 @@
+-- 노트 탭용 폴더/노트 테이블
+-- MySQL에서 실행: source sql/folders_notes.sql;
+
+CREATE TABLE IF NOT EXISTS folders (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  userId INT NOT NULL,
+  title VARCHAR(100) NOT NULL,
+  sortOrder INT NOT NULL DEFAULT 0,
+  createdAt DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updatedAt DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  UNIQUE KEY uq_user_folder_title (userId, title),
+  INDEX idx_folders_user (userId)
+);
+
+CREATE TABLE IF NOT EXISTS notes (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  folderId INT NOT NULL,
+  userId INT NOT NULL,
+  title VARCHAR(200) NOT NULL,
+  content TEXT NOT NULL,
+  createdAt DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updatedAt DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  INDEX idx_notes_folder (folderId),
+  INDEX idx_notes_user (userId),
+  CONSTRAINT fk_notes_folder
+    FOREIGN KEY (folderId) REFERENCES folders(id) ON DELETE CASCADE
+);

@@ -67,8 +67,12 @@ async function updateBoard(
   );
 }
 
-async function deleteBoard(id: number): Promise<void> {
-  await pool.execute('DELETE FROM boards WHERE id = ?', [id]);
+async function deleteBoard(id: number, userId: number): Promise<number> {
+  const [result] = await pool.execute(
+    'DELETE FROM boards WHERE id = ? AND userId = ?',
+    [id, userId],
+  );
+  return Number((result as { affectedRows: number }).affectedRows);
 }
 
 async function countByUserId(userId: number): Promise<number> {

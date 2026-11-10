@@ -158,8 +158,12 @@ async function updateBoard(
 }
 
 async function deleteBoard(id: number, userId: number): Promise<void> {
+  if (!Number.isFinite(id) || id <= 0) {
+    throw new RouteError(HttpStatusCodes.BAD_REQUEST, '잘못된 게시글 ID입니다.');
+  }
+
   const mine = (await BoardRepo.findAllByUserId(userId)).find(
-    (b) => b.id === id,
+    (b) => Number(b.id) === id,
   );
   if (!mine) {
     throw new RouteError(
@@ -168,7 +172,13 @@ async function deleteBoard(id: number, userId: number): Promise<void> {
     );
   }
 
-  await BoardRepo.deleteBoard(id);
+  const deleted = await BoardRepo.deleteBoard(id, userId);
+  if (deleted !== 1) {
+    throw new RouteError(
+      HttpStatusCodes.NOT_FOUND,
+      '게시글을 찾을 수 없습니다.',
+    );
+  }
 }
 
 export default {
